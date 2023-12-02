@@ -1,87 +1,90 @@
-const txtFull = require('./txt').split('\n')
+const txtFull = require('./txt').split('\n');
 
-const txt = `two1nine`.split('\n');
+const txtOneWord = `31gsjtkjdvjdqnrsgnpbnxsdrzmtskfdqhd`.split('\n');
+const txtOneWord2 = `eightwothree
+two1nine`.split('\n');
+
+const txtMoreWords = `two1nine
+eightwothree
+abcone2threexyz
+xtwone3four
+4nineeightseven2
+zoneight234
+7pqrstsixteen
+31gsjtkjdvjdqnrsgnpbnxsdrzmtskfdqhd`.split('\n');
 
 let total = 0;
-const onlyNums = [];
+let totalPartTwo = 0;
+const onlyNumsArray = [];
 
-const newOnlyNums = [];
+function firstPart(txt) {
+  txt.forEach((row) => {
+    const sum = findFirst(row);
+    total += +sum;
+  });
+  console.log('Result part 1:', total);
+}
 
-function init(txt) {
-
-    txt.forEach((row) => {
-        // const sum = findFirst(row);
-        replaceWords(row);
-        // console.log(row)
-      
-        // total += +sum;
-      });
+function secondPart(txt) {
+  txt.forEach(row => {
+    replaceWords(row);
+  });
+  
+  onlyNumsArray.forEach(num => {
+    const sum = findFirst(num);
+    console.log(sum)
+    totalPartTwo += +sum;
+  })
+  console.log('Result part 2:', totalPartTwo);
 }
 
 function replaceWords(row) {
+  const numbers = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
 
-    const numbers = ['one', 'two', 'three']
+  const numbersObj = {
+    'one': 'o1e',
+    'two': 't2o',
+    'three': 't3e',
+    'four': 'f4r',
+    'five': 'f5e',
+    'six': 's6x',
+    'seven': 's7n',
+    'eight': 'e8t',
+    'nine': 'n9e',
+  }
+  
+  let newString = '';
+  let finalString = row;
 
-    for (let i = 0; i < numbers.length; i++) {
-        const element = numbers[i];
-        if (row.includes(numbers[i])) {
-            console.log(i)
-        }
-        
+  Object.keys(numbersObj).forEach(num => {
+    const regex = new RegExp(num, 'g');
+    finalString = finalString.replace(regex, numbersObj[num]);
+  });
+
+  for (const char of newString) {
+    if (!isNaN(char)) {
+      finalString += char;
     }
-    let newString;
-        if (row.includes('one')) {
-            newString = row.replace('one', '1');
-        }
-        
-        // if (newString.includes('two')) {
-        //     newString = newString.replace('two', '2')
-        // }
+  }
 
-
-    // if (newString.includes('three')) {
-    //     newString = newString.replace('three', '3')
-    // }
-
-    // if (newString.includes('four')) {
-    //     newString = newString.replace('four', '4')
-    // }
-
-    // if (newString.includes('five')) {
-    //     newString = newString.replace('five', '5')
-    // }
-
-    // if (newString.includes('six')) {
-    //     newString = newString.replace('six', '6')
-    // }
-
-    // if (newString.includes('seven')) {
-    //     newString = newString.replace('seven', '7')
-    // }
-
-    // if (newString.includes('eight')) {
-    //     newString = newString.replace('eight', '8')
-    // }
-
-    // if (newString.includes('nine')) {
-    //     newString = newString.replace('nine', '9')
-    // }
-
-    
+  if (finalString === '') {
+    const plainNumsFound = findFirst(row);
+    onlyNumsArray.push(plainNumsFound);
+  } else {
+    onlyNumsArray.push(finalString);
+  }
 }
 
 function findFirst(array) {
-  const characters = array.split('');
   let numbers = [];
-  for (let i = 0; i < characters.length; i++) {
-    if (characters[i] >= '0' && characters[i] <= '9') {
-      numbers.push(characters[i]);
+  for (let i = 0; i < array.length; i++) {
+    if (array[i] >= '0' && array[i] <= '9') {
+      numbers.push(array[i]);
     }
   }
 
   let first = numbers[0];
   let last;
-
   if (numbers.length <= 1) {
     last = first;
     numbers.push(last);
@@ -91,7 +94,4 @@ function findFirst(array) {
   return first + last;
 }
 
-
-init(txt)
-
-
+secondPart(txtFull);
